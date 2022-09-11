@@ -7,11 +7,17 @@ const app = express();
 
 app.use(express.static(__dirname + '/public'));
 
+// cors policy
+
+app.use((req, res, next) => { res.header({ "Access-Control-Allow-Origin": "*" }); next(); })
+
+// homepage 
 
 app.get('/', (req, res) => {
     res.sendFile(__dirname + '/public/Home.html');
 });
 
+// web status (soa website)
 app.get('/web-status/', (req, res) => {
     const checkWebStatus = async () => {
         try {
