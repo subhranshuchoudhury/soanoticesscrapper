@@ -1,0 +1,16 @@
+{
+  "name": "iter-notice-backend",
+  "version": "1.0.0",
+  "description": "Iter SOA Notice Scrapper.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Subhranshu Choudhury",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.27.2",
+    "cheerio": "^1.0.0-rc.12",
+    "express": "^4.18.1"
+  }
+}
