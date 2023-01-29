@@ -20,18 +20,15 @@ app.get("/", (req, res) => {
 });
 
 // web status (soa website)
-app.get("/web-status/", (req, res) => {
-  const checkWebStatus = async () => {
-    try {
-      const response = await axios.get(
-        "https://www.soa.ac.in/general-notifications"
-      );
-      res.send({ status: response.status, statusText: response.statusText });
-    } catch (error) {
-      res.send(error);
-    }
-  };
-  checkWebStatus();
+app.get("/web-status/", async (req, res) => {
+  try {
+    const response = await axios.get(
+      "https://www.soa.ac.in/general-notifications"
+    );
+    res.send({ status: response.status, statusText: response.statusText });
+  } catch (error) {
+    res.status(500).send({ error: true, message: error });
+  }
 });
 
 // Iter General Notification Section
@@ -56,7 +53,10 @@ app.get("/gn", async (req, res) => {
     }
     res.send(GeneralNotifications);
   } catch (err) {
-    console.error(err);
+    res.status(500).send({
+      error: true,
+      message: err,
+    });
   }
 });
 
@@ -82,7 +82,10 @@ app.get("/sn", async (req, res) => {
     }
     res.send(GeneralNotifications);
   } catch (err) {
-    console.error(err);
+    res.status(500).send({
+      error: true,
+      message: err,
+    });
   }
 });
 
@@ -105,7 +108,10 @@ app.get("/en", async (req, res) => {
     }
     res.send(GeneralNotifications);
   } catch (err) {
-    console.error(err);
+    res.status(500).send({
+      error: true,
+      message: err,
+    });
   }
 });
 
