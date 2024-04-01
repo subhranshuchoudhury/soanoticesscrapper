@@ -10,8 +10,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// homepage
-
 app.get("/", (req, res) => {
   res.status(200).send({
     active: true,
@@ -19,108 +17,118 @@ app.get("/", (req, res) => {
   });
 });
 
-// web status (soa website)
-app.get("/web-status/", async (req, res) => {
-  try {
-    const response = await axios.get(
-      "https://www.soa.ac.in/general-notifications"
-    );
-    res.send({ status: response.status, statusText: response.statusText });
-  } catch (error) {
-    res.status(500).send({ error: true, message: error });
-  }
-});
-
-// Iter General Notification Section
-
 app.get("/gn", async (req, res) => {
   const url = "https://www.soa.ac.in/general-notifications";
-
   try {
     const { data } = await axios.get(url);
+
     const $ = cheerio.load(data);
-    const GeneralNotifications = [];
-    for (let index = 1; index < 21; index++) {
+
+    const generalNotice = [];
+    for (let index = 1; index < 10; index++) {
       const notification = { event: "", s_date: "", eventLink: "" };
       notification.event = $(
-        `.article-index-${index} a.BlogList-item-title`
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+      )
+        .text()
+        .replace(/\n/g, " ")
+        .trim();
+      notification.s_date = $(
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-meta-secondary time`
       ).text();
-      notification.s_date = $(`.article-index-${index} time`).text();
       notification.eventLink =
         "https://www.soa.ac.in" +
-        $(`.article-index-${index} a.BlogList-item-title`).attr("href");
-      GeneralNotifications.push(notification);
+        $(
+          `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+        ).attr("href");
+      generalNotice.push(notification);
     }
-    res.send(GeneralNotifications);
+    res.send(generalNotice);
   } catch (err) {
-    res.status(500).send({
-      error: true,
-      message: err,
-    });
+    res.json([
+      {
+        event: "There is a problem getting the data, please try again later",
+        s_date: "-",
+        eventLink: "https://www.soa.ac.in/iter-exam-notice",
+      },
+    ]);
   }
 });
-
-// Iter student notice section
 
 app.get("/sn", async (req, res) => {
   const url = "https://www.soa.ac.in/iter-student-notice";
-
   try {
     const { data } = await axios.get(url);
+
     const $ = cheerio.load(data);
-    const GeneralNotifications = [];
-    for (let index = 1; index < 21; index++) {
+
+    const studentNotice = [];
+    for (let index = 1; index < 10; index++) {
       const notification = { event: "", s_date: "", eventLink: "" };
       notification.event = $(
-        `.article-index-${index} a.BlogList-item-title`
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+      )
+        .text()
+        .replace(/\n/g, " ")
+        .trim();
+      notification.s_date = $(
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-meta-secondary time`
       ).text();
-      notification.s_date = $(`.article-index-${index} time`).text();
       notification.eventLink =
         "https://www.soa.ac.in" +
-        $(`.article-index-${index} a.BlogList-item-title`).attr("href");
-      GeneralNotifications.push(notification);
+        $(
+          `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+        ).attr("href");
+      studentNotice.push(notification);
     }
-    res.send(GeneralNotifications);
+    res.send(studentNotice);
   } catch (err) {
-    res.status(500).send({
-      error: true,
-      message: err,
-    });
+    res.json([
+      {
+        event: "There is a problem getting the data, please try again later",
+        s_date: "-",
+        eventLink: "https://www.soa.ac.in/iter-exam-notice",
+      },
+    ]);
   }
 });
 
 app.get("/en", async (req, res) => {
-  const url = "https://www.soa.ac.in/iter-exam-notice";
+  const url = "https://www.soa.ac.in/iter-exam-notice/";
   try {
     const { data } = await axios.get(url);
+
     const $ = cheerio.load(data);
-    const GeneralNotifications = [];
-    for (let index = 1; index < 21; index++) {
+
+    const examNotification = [];
+    for (let index = 1; index < 10; index++) {
       const notification = { event: "", s_date: "", eventLink: "" };
       notification.event = $(
-        `.article-index-${index} a.BlogList-item-title`
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+      )
+        .text()
+        .replace(/\n/g, " ")
+        .trim();
+      notification.s_date = $(
+        `article.blog-basic-grid--container:nth-of-type(${index}) .blog-meta-secondary time`
       ).text();
-      notification.s_date = $(`.article-index-${index} time`).text();
       notification.eventLink =
         "https://www.soa.ac.in" +
-        $(`.article-index-${index} a.BlogList-item-title`).attr("href");
-      GeneralNotifications.push(notification);
+        $(
+          `article.blog-basic-grid--container:nth-of-type(${index}) .blog-title a`
+        ).attr("href");
+      examNotification.push(notification);
     }
-    res.send(GeneralNotifications);
+    res.send(examNotification);
   } catch (err) {
-    res.status(500).send({
-      error: true,
-      message: err,
-    });
+    res.json([
+      {
+        event: "There is a problem getting the data, please try again later",
+        s_date: "-",
+        eventLink: "https://www.soa.ac.in/iter-exam-notice",
+      },
+    ]);
   }
-});
-
-// * for any url
-
-app.get("*", (req, res) => {
-  res.status(404).send({
-    message: "wrong route",
-  });
 });
 
 const PORT = process.env.PORT || 4000;
